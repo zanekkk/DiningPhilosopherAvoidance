@@ -1,3 +1,4 @@
+
 public class Chopstick {
     private boolean taken = false;
     private int value;
