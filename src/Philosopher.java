@@ -1,3 +1,4 @@
+import java.util.Random;
 
 public class Philosopher extends Thread {
 
@@ -26,14 +27,15 @@ public class Philosopher extends Thread {
             }
             //P - opuszczanie
             //V - podnoszenie
+            Random generator = new Random();
 
-            int forkNumber = checker.getNumberOfFreeFork();
-            int kniveNumber = checker.getNumberOfFreeKnive();
+            int forkNumber = checker.getNumberOfFreeKnives();
+            int kniveNumber = checker.getNumberOfFreeFork();
 
             if (checker.checkSafety(forkNumber, kniveNumber, true)) {
 
                 knives[forkNumber].P();
-                System.out.println("Philosopher " + (philosopherNumber + 1) + " is picking a knive " + (kniveNumber + 1) + " up");
+                System.out.println("Philosopher " + (philosopherNumber + 1) + " is picking a knife " + (kniveNumber + 1) + " up");
                 checker.setKnivesPickedUp(kniveNumber, true);
                 forks[kniveNumber].P();
                 try {
@@ -61,6 +63,8 @@ public class Philosopher extends Thread {
                 forks[forkNumber].V();
                 checker.setForksPickedUp(forkNumber, false);
 
+            }else{
+                checker.checkSafety(forkNumber, kniveNumber, false);
             }
 
         }

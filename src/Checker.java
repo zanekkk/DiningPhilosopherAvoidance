@@ -11,7 +11,7 @@ public class Checker {
     public Checker(int knivesNumber, int forkNumber) {
         this.forks = new boolean[knivesNumber];
         this.knives = new boolean[forkNumber];
-
+        this.serviceNumber = knivesNumber + forkNumber;
         for(boolean knive : knives){
             knive = false;
         }
@@ -44,7 +44,7 @@ public class Checker {
         return number;
     }
 
-    public int getNumberOfFreeKnive() {
+    public int getNumberOfFreeKnives() {
         int number = -1;
         for (int i = 0; i < knives.length; i++) {
             if (knives[i] == false) {
@@ -66,6 +66,7 @@ public class Checker {
             this.forks[forkNumber] = pick;
 
         this.knives[kniveNumber] = pick;
+        }else {return false;}
 
         for (boolean picked : forks) {
             if (picked) {
@@ -86,7 +87,7 @@ public class Checker {
         if (i == serviceNumber + 5) {
             return false;
         }
-        }
+
         return true;
 
     }
