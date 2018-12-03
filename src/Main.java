@@ -1,11 +1,30 @@
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Chopstick[] chopsticks = new Chopstick[5];
-        Checker detector = new Checker();
+        Scanner scanner = new Scanner(System.in);
+
+
+        System.out.println("How many knives ? ");
+        int knivesNumber = scanner.nextInt();
+        System.out.println("How many forks ? ");
+        int forksNumber = scanner.nextInt();
+
+        Chopstick[] knives = new Chopstick[knivesNumber];
+        Chopstick[] forks = new Chopstick[forksNumber];
+
+        Checker detector = new Checker(knivesNumber, forksNumber);
+        for (int i = 0; i < knivesNumber; i++) {
+            knives[i] = new Chopstick(1);
+        }
+
+        for (int i = 0; i < forksNumber; i++) {
+            forks[i] = new Chopstick(1);
+        }
+
+        
         for (int i = 0; i < 5; i++) {
-            chopsticks[i] = new Chopstick(1);
-            Thread p = new Philosopher(i, chopsticks, detector);
+            Thread p = new Philosopher(i, knives, forks, detector);
             p.start();
         }
     }

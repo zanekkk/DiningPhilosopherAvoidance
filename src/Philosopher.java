@@ -2,18 +2,20 @@
 public class Philosopher extends Thread {
 
     private int philosopherNumber;
-    private Chopstick[] chopstick;
+    private Chopstick[] knives;
+    private Chopstick[] forks;
+
     private Checker checker;
 
-    public Philosopher(int philosopherNumber, Chopstick[] chopstick, Checker checker) {
+    public Philosopher(int philosopherNumber, Chopstick[] forks, Chopstick[] knives, Checker checker) {
         this.philosopherNumber = philosopherNumber;
-        this.chopstick = chopstick;
+        this.knives = knives;
+        this.forks = forks;
         this.checker = checker;
     }
 
 
     public void run() {
-        int numberOfSecondChopstick = (philosopherNumber + 1) % 5;
 
         while (true) {
 
@@ -25,38 +27,42 @@ public class Philosopher extends Thread {
             //P - opuszczanie
             //V - podnoszenie
 
+            int forkNumber = checker.getNumberOfFreeFork();
+            int kniveNumber = checker.getNumberOfFreeKnive();
 
-            if(!checker.checkSafety(philosopherNumber, true)){
-                chopstick[philosopherNumber].P();
-                System.out.println("Philosopher " + (philosopherNumber + 1) + " is picking a chopstick " + (philosopherNumber + 1) + " up");
-                checker.setPickedUp(philosopherNumber, true);
-            }else{
-                checker.setPickedUp(philosopherNumber, false);
+            if (checker.checkSafety(forkNumber, kniveNumber, true)) {
+
+                knives[forkNumber].P();
+                System.out.println("Philosopher " + (philosopherNumber + 1) + " is picking a knive " + (kniveNumber + 1) + " up");
+                checker.setKnivesPickedUp(kniveNumber, true);
+                forks[kniveNumber].P();
+                try {
+                    Thread.sleep((int) (Math.random() + 100));
+                } catch (InterruptedException e) {
+                }
+
+                System.out.println("Philosopher " + (philosopherNumber + 1) + " is picking up a fork " + (forkNumber + 1) + " up");
+                checker.setForksPickedUp(forkNumber, true);
+
+                checker.setEating(philosopherNumber, true);
+                System.out.println("Philosopher " + (philosopherNumber + 1) + " is eating...");
+
+                try {
+                    Thread.sleep((int) (Math.random() + 100));
+                } catch (InterruptedException e) {
+                }
+
+                System.out.println("Philosopher " + (philosopherNumber + 1) + " is putting a knive " + (kniveNumber + 1) + " down");
+                checker.setKnivesPickedUp(kniveNumber, false);
+                checker.setEating(philosopherNumber, false);
+                knives[kniveNumber].V();
+
+                System.out.println("Philosopher " + (philosopherNumber + 1) + " is putting a fork " + (forkNumber + 1) + " down");
+                forks[forkNumber].V();
+                checker.setForksPickedUp(forkNumber, false);
 
             }
 
-            try {
-                Thread.sleep((int) (Math.random() + 100));
-            } catch (InterruptedException e) {
-            }
-
-            chopstick[numberOfSecondChopstick].P();
-            System.out.println("Philosopher " + (philosopherNumber + 1) + " is picking up a chopstick " + (numberOfSecondChopstick + 1) + " up");
-            System.out.println("Philosopher " + (philosopherNumber + 1) + " is eating...");
-            checker.setPickedUp(numberOfSecondChopstick, true);
-            checker.setEating(philosopherNumber, true);
-
-            try {
-                Thread.sleep((int) (Math.random() * 100));
-            } catch (InterruptedException e) {
-            }
-            System.out.println("Philosopher " + (philosopherNumber + 1) + " is putting a chopstick " + (numberOfSecondChopstick + 1) + " down");
-            checker.setPickedUp(numberOfSecondChopstick,false);
-            checker.setEating(philosopherNumber, false);
-            chopstick[numberOfSecondChopstick].V();
-            System.out.println("Philosopher " + (philosopherNumber + 1) + " is putting a chopstick " + (philosopherNumber + 1) + " down");
-            chopstick[philosopherNumber].V();
-            checker.setPickedUp(philosopherNumber,false);
         }
 
 
